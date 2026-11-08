@@ -1,0 +1,35 @@
+<div class="page-heading editor-heading">
+  <p class="eyebrow">THE WRITING DESK</p><h1>写文章</h1>
+  <p>在这里写 Markdown、粘贴截图和预览。草稿保存在当前浏览器，发布后文章会公开。</p>
+</div>
+<div class="editor-grid">
+  <aside class="editor-sidebar">
+    <div class="editor-sidehead"><h2>本机草稿</h2><button type="button" id="new-post" class="button" disabled>新文章</button></div>
+    <ul id="editor-posts"></ul>
+  </aside>
+  <form id="editor-form" method="post">
+    <fieldset disabled>
+    <div class="editor-fields">
+      <label>标题<input name="title" maxlength="100" placeholder="给这篇文章起个标题"></label>
+      <label>分类<select name="category"><option value="essay">随笔</option><option value="tech">技术笔记</option></select></label>
+    </div>
+    <label>摘要 <span class="optional">可选</span><input name="summary" maxlength="240" placeholder="写一行摘要，显示在文章列表里"></label>
+    <label>正文 <span class="optional">Markdown</span><textarea name="body" rows="13" maxlength="60000" aria-describedby="paste-hint" placeholder="从第一句话开始。"></textarea></label>
+    <p id="paste-hint" class="optional paste-hint">可直接粘贴截图。支持 PNG、JPEG、GIF 和 WebP，每张最多 8 MB。</p>
+    <div class="editor-actions">
+      <button type="button" id="preview-post" class="button">预览</button>
+      <button type="button" id="save-post" class="button">保存草稿</button>
+    </div>
+    <div class="editor-feedback"><p id="editor-status" role="status"></p><a id="editor-link" class="text-link" hidden>查看 GitHub 提交 ↗</a></div>
+    <section id="editor-preview" aria-labelledby="preview-title" hidden><h2 id="preview-title">正文预览</h2><div class="prose"></div></section>
+    <details class="publish-panel">
+      <summary>发布到 GitHub</summary>
+      <p id="publish-target"></p>
+      <p>使用仅授予此仓库 Contents 读写权限的细粒度令牌。令牌只在本次发布中使用。</p>
+      <label>GitHub 令牌<input id="publish-token" type="password" autocomplete="off" spellcheck="false"></label>
+      <button type="submit" id="publish-post" class="button primary">发布文章</button>
+    </details>
+    </fieldset>
+  </form>
+</div>
+<script src="./assets/write.js" defer></script>

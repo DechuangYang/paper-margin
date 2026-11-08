@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 388" role="img" aria-labelledby="title">
+  <title id="title">纸页、树枝与一枚朱红色印章</title>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#f0e8d4" stroke-opacity=".09"/></pattern>
+    <pattern id="lines" width="12" height="18" patternUnits="userSpaceOnUse"><path d="M0 17.5h12" stroke="#777a5c" stroke-opacity=".21"/></pattern>
+    <linearGradient id="cover" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#334939"/><stop offset="1" stop-color="#202e27"/></linearGradient>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#f1e6c9"/><stop offset="1" stop-color="#d7c7a3"/></linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="5" dy="10" stdDeviation="10" flood-color="#101911" flood-opacity=".45"/></filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  </defs>
+  <path fill="url(#cover)" d="M0 0h560v388H0z"/>
+  <path fill="url(#grid)" d="M0 0h560v388H0z"/>
+  <rect x="15" y="15" width="530" height="358" fill="none" stroke="#c3c5a0" stroke-opacity=".27"/>
+  <g fill="none" stroke="#e1d5ae" stroke-opacity=".18">
+    <circle cx="294" cy="186" r="137"/><circle cx="294" cy="186" r="158"/><path d="M67 193h425M280 35v318"/>
+  </g>
+  <g transform="translate(280 189) rotate(-12)" filter="url(#shadow)">
+    <path d="M-103-119h190l37 36v198h-227z" fill="#a8ac85"/>
+  </g>
+  <g transform="translate(280 188) rotate(9)" filter="url(#shadow)">
+    <path d="M-107-126H67l43 43v213h-217z" fill="url(#paper)"/>
+    <path d="M67-126v43h43" fill="#bbae8e"/>
+    <path d="M-87-70H90v173H-87z" fill="url(#lines)"/>
+    <path d="M-73-70v176" stroke="#a24c39" stroke-opacity=".35"/>
+    <g fill="none" stroke="#405944" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-32 95Q8 63 13 15Q19-25 41-56"/>
+      <path d="M2 60Q-21 48-27 29Q-1 36 2 60M12 33Q36 10 54 14Q45 35 12 33M16 0Q-2-17 0-38Q20-25 16 0M24-24Q38-43 57-42Q48-22 24-24M40-55Q40-74 52-82Q57-67 40-55"/>
+    </g>
+    <path d="M50 68h28v28H50z" fill="#a34836"/><path d="M54 72h20v20H54zm4 4 12 12m0-12L58 88" fill="none" stroke="#eedfc0" stroke-width="1"/>
+    <path d="M-85-98h31m-31 8h52" stroke="#5c674f" stroke-opacity=".64"/>
+  </g>
+  <g font-family="monospace" font-size="10" fill="#d5d3b5" letter-spacing="2">
+    <text x="34" y="45">FIELD NOTES</text><text x="34" y="348">FIG. 01</text>
+  </g>
+  <g stroke="#bfbf99" stroke-opacity=".65"><path d="M514 39h15m-7.5-7.5v15M514 349h15m-7.5-7.5v15"/></g>
+  <path d="M0 0h560v388H0z" filter="url(#grain)" opacity=".10" style="mix-blend-mode:soft-light"/>
+</svg>

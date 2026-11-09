@@ -1,5 +1,5 @@
 import MarkdownIt from "markdown-it";
-import { githubClient, publishArticle } from "./github.js";
+import { deleteArticle, githubClient, publishArticle } from "./github.js";
 
 const form = document.querySelector("#editor-form");
 const list = document.querySelector("#editor-posts");
@@ -15,6 +15,10 @@ const fields = ["title", "category", "summary", "body"];
 const textArea = form.elements.body;
 const newPost = document.querySelector("#new-post");
 const publish = document.querySelector("#publish-post");
+const deleteTarget = document.querySelector("#delete-target");
+const deleteConfirm = document.querySelector("#delete-confirm");
+const deleteButton = document.querySelector("#delete-post");
+const deleteNotice = document.querySelector("#delete-status");
 const extensions = { "image/png": "png", "image/jpeg": "jpg", "image/gif": "gif", "image/webp": "webp" };
 const databaseName = "paper-margin:" + new URL(".", location.href).pathname;
 
@@ -31,6 +35,11 @@ function status(message, error = false) {
 function publishStatus(message, error = false) {
   publishNotice.textContent = message;
   publishNotice.classList.toggle("error", error);
+}
+
+function deleteStatus(message, error = false) {
+  deleteNotice.textContent = message;
+  deleteNotice.classList.toggle("error", error);
 }
 
 const database = new Promise((resolve, reject) => {
@@ -113,6 +122,7 @@ async function run(work, report = status) {
   } finally {
     for (const control of controls) control.disabled = false;
     publish.disabled = !repository;
+    deleteButton.disabled = !repository || deleteTarget.options.length === 1;
     busy = false;
   }
 }
@@ -232,6 +242,40 @@ form.addEventListener("submit", (event) => {
     publishConfirm.checked = false;
     publishStatus("已提交到 GitHub。GitHub Actions 构建完成后，文章会出现在网站上。");
   }, publishStatus);
+});
+
+deleteTarget.addEventListener("change", () => {
+  deleteConfirm.checked = false;
+  deleteStatus("");
+});
+deleteButton.addEventListener("click", () => {
+  if (busy || !repository) return;
+  const selected = deleteTarget.selectedOptions[0];
+  if (!selected?.value) {
+    deleteStatus("请先选择要删除的文章。", true);
+    deleteTarget.focus();
+    return;
+  }
+  if (!deleteConfirm.checked) {
+    deleteStatus("请确认要删除选中的文章。", true);
+    deleteConfirm.focus();
+    return;
+  }
+  const token = tokenField.value.trim();
+  if (!token) {
+    deleteStatus("请在上方填写 GitHub 令牌。", true);
+    tokenField.focus();
+    return;
+  }
+  tokenField.value = "";
+  deleteConfirm.checked = false;
+  run(async () => {
+    deleteStatus("正在向 GitHub 提交删除…");
+    await deleteArticle(githubClient(repository, token), branch, selected.value);
+    selected.remove();
+    deleteTarget.value = "";
+    deleteStatus("已提交删除。GitHub Actions 构建完成后，文章会从网站下线。");
+  }, deleteStatus);
 });
 
 document.querySelector("#publish-target").textContent = repository ? "目标仓库：" + repository : "当前预览没有配置 GitHub 仓库。";

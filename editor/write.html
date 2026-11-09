@@ -25,11 +25,24 @@
     <details class="publish-panel">
       <summary>发布到 GitHub</summary>
       <p id="publish-target"></p>
-      <p>使用仅授予此仓库 Contents 读写权限的细粒度令牌。令牌只在本次发布中使用。</p>
+      <p>使用仅授予此仓库 Contents 读写权限的细粒度令牌。令牌只在本次操作中使用。</p>
       <label>GitHub 令牌<input id="publish-token" type="password" autocomplete="off" spellcheck="false"></label>
       <label class="publish-confirm"><input id="publish-confirm" type="checkbox"> 我确认将这篇文章和正文图片公开发布。</label>
       <button type="submit" id="publish-post" class="button primary">发布文章</button>
       <div class="editor-feedback"><p id="publish-status" role="status"></p><a id="editor-link" class="text-link" hidden>查看 GitHub 提交 ↗</a></div>
+      <details class="delete-panel">
+        <summary>删除已发布文章</summary>
+        <label>选择文章
+          <select id="delete-target">
+            <option value="">请选择一篇文章</option>
+            <!-- PUBLISHED_POST_OPTIONS -->
+          </select>
+        </label>
+        <p>提交删除后，文章会在网站重新构建时下线。草稿、图片文件和 Git 历史会保留。</p>
+        <label class="publish-confirm"><input id="delete-confirm" type="checkbox"> 我确认删除选中的文章。</label>
+        <button type="button" id="delete-post" class="button delete-button">删除文章</button>
+        <p id="delete-status" role="status"></p>
+      </details>
     </details>
     </fieldset>
   </form>

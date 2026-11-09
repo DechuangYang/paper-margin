@@ -148,3 +148,7 @@ nav .write-link:hover { background: #263d31; }
 #publish-status { margin-block: 10px; color: var(--green); }
 #publish-status.error { color: var(--red); }
 #publish-status:empty { display: none; }
+.delete-panel { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.delete-panel > label:first-of-type { margin-top: 12px; }
+.delete-button, #delete-status.error { color: var(--red); }
+#delete-status:empty { display: none; }

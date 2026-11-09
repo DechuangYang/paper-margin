@@ -62,3 +62,18 @@ export async function publishArticle(api, branch, path, markdown, files) {
   await api("更新发布分支", "/git/refs/" + branchRef, "PATCH", { sha: commit.sha, force: false });
   return commit.sha;
 }
+export async function deleteArticle(api, branch, filename) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(filename)) {
+    throw new Error("请选择一篇已发布文章。");
+  }
+  const path = "/contents/content/" + encodeURIComponent(filename);
+  const file = await api("读取待删除文章", path + "?ref=" + encodeURIComponent(branch));
+  if (file.type !== "file" || file.path !== "content/" + filename || !file.sha) {
+    throw new Error("无法确认要删除的文章，请刷新后重试。");
+  }
+  await api("删除文章", path, "DELETE", {
+    message: "Unpublish blog post",
+    sha: file.sha,
+    branch,
+  });
+}

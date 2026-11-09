@@ -29,6 +29,7 @@ def read_post(path):
         raise ValueError(f"{path.name} 的分类或文件名不符合约定")
     meta.setdefault("summary", "")
     meta["date"] = date.fromisoformat(meta["date"])
+    meta["filename"] = path.name
     meta["url"] = f"./{path.stem}.html"
     if path.stem in {"index", "archive", "write", "404"}:
         raise ValueError(f"{path.name} 使用了保留名称")
@@ -147,6 +148,12 @@ def main():
     for post in posts:
         (DIST / post["url"]).write_text(article(post), encoding="utf-8")
     editor = (ROOT / "editor" / "write.html").read_text(encoding="utf-8")
+    published_options = []
+    for post in posts:
+        title = post["title"] + ("（示例）" if post.get("sample") == "true" else "")
+        label = f'{post["date"].isoformat()} · {title}'
+        published_options.append(f'<option value="{escape(post["filename"])}">{escape(label)}</option>')
+    editor = editor.replace("<!-- PUBLISHED_POST_OPTIONS -->", "\n".join(published_options))
     repository = escape(os.environ.get("GITHUB_REPOSITORY", ""))
     branch = escape(os.environ.get("GITHUB_REF_NAME", "main"))
     config = f'<div id="pages-config" data-repository="{repository}" data-branch="{branch}" hidden></div>'

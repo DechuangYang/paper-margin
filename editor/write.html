@@ -20,14 +20,16 @@
       <button type="button" id="preview-post" class="button">预览</button>
       <button type="button" id="save-post" class="button">保存草稿</button>
     </div>
-    <div class="editor-feedback"><p id="editor-status" role="status"></p><a id="editor-link" class="text-link" hidden>查看 GitHub 提交 ↗</a></div>
+    <div class="editor-feedback"><p id="editor-status" role="status"></p></div>
     <section id="editor-preview" aria-labelledby="preview-title" hidden><h2 id="preview-title">正文预览</h2><div class="prose"></div></section>
     <details class="publish-panel">
       <summary>发布到 GitHub</summary>
       <p id="publish-target"></p>
       <p>使用仅授予此仓库 Contents 读写权限的细粒度令牌。令牌只在本次发布中使用。</p>
       <label>GitHub 令牌<input id="publish-token" type="password" autocomplete="off" spellcheck="false"></label>
+      <label class="publish-confirm"><input id="publish-confirm" type="checkbox"> 我确认将这篇文章和正文图片公开发布。</label>
       <button type="submit" id="publish-post" class="button primary">发布文章</button>
+      <div class="editor-feedback"><p id="publish-status" role="status"></p><a id="editor-link" class="text-link" hidden>查看 GitHub 提交 ↗</a></div>
     </details>
     </fieldset>
   </form>

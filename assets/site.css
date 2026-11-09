@@ -143,3 +143,8 @@ nav .write-link:hover { background: #263d31; }
 .publish-panel summary { cursor: pointer; font-weight: 700; color: var(--green); }
 .publish-panel p { font-size: 13px; color: var(--muted); }
 #editor-form fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+#editor-form .publish-confirm { display: flex; align-items: baseline; gap: 8px; font-weight: 400; }
+#editor-form .publish-confirm input { display: inline-block; width: auto; margin: 0; }
+#publish-status { margin-block: 10px; color: var(--green); }
+#publish-status.error { color: var(--red); }
+#publish-status:empty { display: none; }

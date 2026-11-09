@@ -4,6 +4,8 @@ import { githubClient, publishArticle } from "./github.js";
 const form = document.querySelector("#editor-form");
 const list = document.querySelector("#editor-posts");
 const notice = document.querySelector("#editor-status");
+const publishNotice = document.querySelector("#publish-status");
+const publishConfirm = document.querySelector("#publish-confirm");
 const preview = document.querySelector("#editor-preview");
 const commitLink = document.querySelector("#editor-link");
 const tokenField = document.querySelector("#publish-token");
@@ -24,6 +26,11 @@ let previewUrls = [];
 function status(message, error = false) {
   notice.textContent = message;
   notice.classList.toggle("error", error);
+}
+
+function publishStatus(message, error = false) {
+  publishNotice.textContent = message;
+  publishNotice.classList.toggle("error", error);
 }
 
 const database = new Promise((resolve, reject) => {
@@ -60,6 +67,8 @@ function load(post) {
   for (const field of fields) form.elements[field].value = draft[field];
   clearPreview();
   commitLink.hidden = true;
+  publishConfirm.checked = false;
+  publishStatus("");
   dirty = false;
 }
 
@@ -92,7 +101,7 @@ async function save() {
   return current;
 }
 
-async function run(work) {
+async function run(work, report = status) {
   if (busy) return;
   busy = true;
   const controls = [...form.elements, newPost];
@@ -100,7 +109,7 @@ async function run(work) {
   try {
     await work();
   } catch (error) {
-    status(error.message || "操作失败，请稍后重试。", true);
+    report(error.message || "操作失败，请稍后重试。", true);
   } finally {
     for (const control of controls) control.disabled = false;
     publish.disabled = !repository;
@@ -150,7 +159,7 @@ textArea.addEventListener("paste", (event) => {
   status("图片已插入，可以点击「预览」。");
 });
 
-form.addEventListener("input", (event) => { if (event.target !== tokenField) dirty = true; });
+form.addEventListener("input", (event) => { if (fields.includes(event.target.name)) dirty = true; });
 window.addEventListener("beforeunload", (event) => { if (dirty) event.preventDefault(); });
 newPost.addEventListener("click", () => {
   if (!canSwitch()) return;
@@ -192,20 +201,26 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   if (busy || !repository) return;
   if (!form.elements.title.value.trim() || !textArea.value.trim()) {
-    status("发布前请填写标题和正文。", true);
+    publishStatus("发布前请填写标题和正文。", true);
     return;
   }
   if (!tokenField.value.trim()) {
-    status("请输入此仓库的细粒度 GitHub 令牌。", true);
+    publishStatus("请输入此仓库的细粒度 GitHub 令牌。", true);
     return;
   }
-  if (!window.confirm("文章和正文里的图片会提交到公开仓库 " + repository + "。现在发布吗？")) return;
+  if (!publishConfirm.checked) {
+    publishStatus("请先勾选公开发布确认。", true);
+    publishConfirm.focus();
+    return;
+  }
+  commitLink.hidden = true;
+  publishStatus("正在保存草稿…");
   const token = tokenField.value.trim();
   tokenField.value = "";
   run(async () => {
     const saved = await save();
     await refresh();
-    status("正在提交文章和图片…");
+    publishStatus("正在提交文章和图片…");
     const line = (value) => value.replace(/\s+/g, " ").trim();
     const post = [
       "---", "title: " + line(saved.title), "date: " + saved.date, "category: " + saved.category,
@@ -214,8 +229,9 @@ form.addEventListener("submit", (event) => {
     const sha = await publishArticle(githubClient(repository, token), branch, "content/p-" + saved.id + ".md", post, imagesIn(saved.body));
     commitLink.href = "https://github.com/" + repository + "/commit/" + sha;
     commitLink.hidden = false;
-    status("已提交到 GitHub。GitHub Actions 构建完成后，文章会出现在网站上。");
-  });
+    publishConfirm.checked = false;
+    publishStatus("已提交到 GitHub。GitHub Actions 构建完成后，文章会出现在网站上。");
+  }, publishStatus);
 });
 
 document.querySelector("#publish-target").textContent = repository ? "目标仓库：" + repository : "当前预览没有配置 GitHub 仓库。";
